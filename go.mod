@@ -1,3 +1,3 @@
-module github.com/mpkondrashin/telttest
+module telttest
 
 go 1.17
