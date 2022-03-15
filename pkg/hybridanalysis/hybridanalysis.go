@@ -43,7 +43,7 @@ func (c *Client) SetUserAgent(userAgent string) *Client {
 
 func (c *Client) ListLatestSamples() (*ListLatest, error) {
 	client := &http.Client{}
-	url := "https://www.AAAhybrid-analysis.com/api/v2/feed/latest"
+	url := "https://www.hybrid-analysis.com/api/v2/feed/latest"
 	//fmt.Printf("URL: %s\n", url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
