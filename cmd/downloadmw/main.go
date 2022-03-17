@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/mpkondrashin/telttest/pkg/demomw/gen"
+	"github.com/mpkondrashin/telttest/pkg/demomw"
 )
 
 func main() {
@@ -11,5 +11,5 @@ func main() {
 		println("Usage: demomw <folder>")
 		return
 	}
-	gen.Generate(os.Args[1])
+	demomw.Generate(os.Args[1])
 }
