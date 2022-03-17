@@ -48,12 +48,17 @@ func processSamples(samplesChannel chan string, config *Config) {
 */
 
 func checkSample(path string, config *Config) {
+	sha1, err := FileSHA1(path)
+	if err != nil {
+		log.Printf("FileSHA1: %v", err)
+		return
+	}
 	stopTime := time.Now().Add(config.Timeout)
 	for i := 0; time.Now().Before(stopTime); i++ {
 		log.Printf("%d: %s", i, path)
 		time.Sleep(10 * time.Second)
 		//time.Sleep(1 * time.Minute)
-		ok := checkConsistency(path, config)
+		ok := checkConsistency(path, sha1, config)
 		if ok {
 			return
 		}
@@ -61,7 +66,7 @@ func checkSample(path string, config *Config) {
 	log.Printf("Timeout for %s", path)
 }
 
-func checkConsistency(path string, config *Config) bool {
+func checkConsistency(path string, sha1 string, config *Config) bool {
 	s, err := inDir(path)
 	if err != nil {
 		log.Print("inDir", err)
@@ -72,7 +77,7 @@ func checkConsistency(path string, config *Config) bool {
 		log.Print("inTargetDir", err)
 		return true
 	}
-	q, err := inQuarantineDir(path, config)
+	q, err := inQuarantineDir(sha1, config)
 	if err != nil {
 		log.Print("inQuarantineDir", err)
 		return true
@@ -112,11 +117,7 @@ func inTargetDir(path string, config *Config) (bool, error) {
 	return exist(p)
 }
 
-func inQuarantineDir(path string, config *Config) (bool, error) {
-	sha1, err := FileSHA1(path)
-	if err != nil {
-		return false, err
-	}
+func inQuarantineDir(sha1 string, config *Config) (bool, error) {
 	p := filepath.Join(config.QuarantineDir, sha1+".zip")
 	return exist(p)
 }
