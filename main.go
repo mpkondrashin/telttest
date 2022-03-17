@@ -34,7 +34,7 @@ func main() {
 			go checkSample(path, config)
 		}
 		log.Printf("Cycle finished")
-		time.Sleep(5 * time.Minute)
+		time.Sleep(1 * time.Minute)
 	}
 }
 
