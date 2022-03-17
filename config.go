@@ -4,23 +4,19 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
-	"fmt"
 	"os"
-	"strconv"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
 
+const ENV_PREFIX = "TELTTEST"
+
 type Config struct {
-	HybridAnalysisAPIKey string `yaml:"HybridAnalysisAPIKey"`
-	ThreatLevelThreshold int    `yaml:"ThreatLevelThreshold"`
-	SkipList             string `yaml:"SkipList"`
-	IncludeList          string `yaml:"IncludeList"`
-	ExtList              string `yaml:"ExtList"`
-	SourceDir            string `yaml:"SourceDir"`
-	TargetDir            string `yaml:"TargetDir"`
-	QuarantineDir        string `yaml:"QuarantineDir"`
-	Log                  string `yaml:"Log"`
+	SourceDir     string `yaml:"SourceDir"`
+	TargetDir     string `yaml:"TargetDir"`
+	QuarantineDir string `yaml:"QuarantineDir"`
+	Log           string `yaml:"Log"`
 }
 
 func NewConfig() *Config {
@@ -41,18 +37,6 @@ func (c *Config) ParseAll(filePath string) error {
 }
 
 func (c *Config) ParseArgs() {
-	flag.StringVar(&c.HybridAnalysisAPIKey, "hakey",
-		c.HybridAnalysisAPIKey, "Hybrid Analysis API key")
-	flag.StringVar(&c.TargetDir, "output",
-		c.TargetDir, "Target folder")
-	flag.IntVar(&c.ThreatLevelThreshold, "level",
-		c.ThreatLevelThreshold, "Threat level threshold")
-	flag.StringVar(&c.SkipList, "skip",
-		c.SkipList, "Coma separated list of platform keywords to skip")
-	flag.StringVar(&c.IncludeList, "include",
-		c.IncludeList, "Coma separated list of platform keywords to include")
-	flag.StringVar(&c.ExtList, "ext",
-		c.ExtList, "Coma separated list of extesions of files to include")
 	flag.StringVar(&c.Log, "log",
 		c.Log, "Log file")
 	flag.Parse()
@@ -78,49 +62,31 @@ func (c *Config) ParseConfig(data []byte) error {
 	return err
 }
 
-func (c *Config) ParseEnv() error {
-	v, ok := os.LookupEnv("TELTTEST_HYBRID_ANALYSIS_API_KEY")
-	if ok {
-		c.HybridAnalysisAPIKey = v
+func (c *Config) ParseEnvWithPrefix(prefix string) error {
+	p := func(s string) string {
+		return strings.Join([]string{prefix, s}, "_")
 	}
-	mstlt := "TELTTEST_THREAT_LEVEL_THRESHOLD"
-	v, ok = os.LookupEnv(mstlt)
-	if ok {
-		i, err := strconv.Atoi(v)
-		if err != nil {
-			return fmt.Errorf("%s=%s: %w", mstlt, v, err)
-		}
-		c.ThreatLevelThreshold = i
-	}
-	v, ok = os.LookupEnv("TELTTEST_SKIP_LIST")
-	if ok {
-		c.SkipList = v
-	}
-	v, ok = os.LookupEnv("TELTTEST_INCLUDE_LIST")
-	if ok {
-		c.IncludeList = v
-	}
-	v, ok = os.LookupEnv("TELTTEST_EXT_LIST")
-	if ok {
-		c.ExtList = v
-	}
-	v, ok = os.LookupEnv("TELTTEST_SOURCE_DIR")
+	v, ok := os.LookupEnv(p("SOURCE_DIR"))
 	if ok {
 		c.SourceDir = v
 	}
-	v, ok = os.LookupEnv("TELTTEST_TARGET_DIR")
+	v, ok = os.LookupEnv(p("TARGET_DIR"))
 	if ok {
 		c.TargetDir = v
 	}
-	v, ok = os.LookupEnv("TELTTEST_QUARANTINE_DIR")
+	v, ok = os.LookupEnv(p("QUARANTINE_DIR"))
 	if ok {
 		c.QuarantineDir = v
 	}
-	v, ok = os.LookupEnv("TELTTEST_LOG")
+	v, ok = os.LookupEnv(p("LOG"))
 	if ok {
 		c.Log = v
 	}
 	return nil
+}
+
+func (c *Config) ParseEnv() error {
+	return c.ParseEnvWithPrefix(ENV_PREFIX)
 }
 
 func (c *Config) Validate() error {
@@ -132,12 +98,6 @@ func (c *Config) Validate() error {
 	}
 	if c.QuarantineDir == "" {
 		return errors.New("no quarantine folder provided")
-	}
-	if c.HybridAnalysisAPIKey == "" {
-		return errors.New("no Hybrid Analysis API key provided")
-	}
-	if c.ThreatLevelThreshold < 0 || c.ThreatLevelThreshold > 2 {
-		return fmt.Errorf("wrong threat level threshold value (%d)", c.ThreatLevelThreshold)
 	}
 	return nil
 }

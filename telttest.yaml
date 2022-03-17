@@ -1,8 +1,4 @@
-#HybridAnalysisAPIKey: 
-ThreatLevelThreshold: 1
-SkipList: Android,Linux
-ExtList:  bin,pdf,xls,doc,docx,xlsx,ppt,pptx,rtf
-SourceDir: /home/michael/source
-TargetDir: /home/michael/target
-QuarantineDir: /opt/tunneleffect/quarantine
+SourceDir: source
+TargetDir: target
+QuarantineDir: quarantine
 Log: telttest.log

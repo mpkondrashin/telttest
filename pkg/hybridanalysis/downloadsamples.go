@@ -8,12 +8,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	//	"github.com/mpkondrashin/mstream/pkg/hybridanalysis"
 )
 
 type DownloadSamples struct {
-	ha *Client
-	//	tagetFolder          string
+	ha                   *Client
 	skipList             []string
 	includeList          []string
 	extensions           []string
@@ -22,8 +20,7 @@ type DownloadSamples struct {
 
 func NewDownloadSamples(ha *Client) *DownloadSamples {
 	return &DownloadSamples{
-		ha: ha,
-		//	tagetFolder:          tagetFolder,
+		ha:                   ha,
 		threatLevelThreshold: 2,
 	}
 }
