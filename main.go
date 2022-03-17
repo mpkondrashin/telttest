@@ -74,7 +74,7 @@ func checkConsistency(path string, config *Config) bool {
 	}
 	q, err := inQuarantineDir(path, config)
 	if err != nil {
-		log.Print("inTargetDir", err)
+		log.Print("inQuarantineDir", err)
 		return true
 	}
 	if s && !t && !q {
