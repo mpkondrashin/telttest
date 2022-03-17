@@ -27,14 +27,7 @@ func main() {
 	}
 	configLogging(config)
 	log.Printf("%s Started", title)
-	//samples := HASamples(config)
-	//samplesChannel := make(chan string)
-	//err = samples.Download(config.SourceDir, samplesChannel)
-	//if err != nil {
-	//		log.Printf("samples.Download: %v", err)
-	//	}
-	//	go processSamples(samplesChannel, config)
-	//	<-samplesChannel
+
 	for {
 		paths := demomw.Generate(config.SourceDir)
 		for _, path := range paths {
@@ -71,17 +64,17 @@ func checkSample(path string, config *Config) {
 func checkConsistency(path string, config *Config) bool {
 	s, err := inDir(path)
 	if err != nil {
-		log.Print(err)
+		log.Print("inDir", err)
 		return true
 	}
 	t, err := inTargetDir(path, config)
 	if err != nil {
-		log.Print(err)
+		log.Print("inTargetDir", err)
 		return true
 	}
 	q, err := inQuarantineDir(path, config)
 	if err != nil {
-		log.Print(err)
+		log.Print("inTargetDir", err)
 		return true
 	}
 	if s && !t && !q {
