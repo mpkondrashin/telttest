@@ -19,7 +19,7 @@ func Generate(targetDir string) (paths []string) {
 	for _, code := range []string{ransomwareCode, spywareCode, novirusCode} {
 		path, err := build(code, "windows", "amd64", targetDir)
 		if err != nil {
-			log.Println(err)
+			log.Printf("Generate: %v", err)
 		}
 		paths = append(paths, path)
 	}
