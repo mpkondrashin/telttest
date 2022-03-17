@@ -43,12 +43,14 @@ func main() {
 	log.Printf("Cycle finished")
 }
 
+/*
 func processSamples(samplesChannel chan string, config *Config) {
 	for sample := range samplesChannel {
 		checkSample(sample, config)
 	}
 	samplesChannel <- ""
 }
+*/
 
 func checkSample(path string, config *Config) {
 	for i := 0; i < 20; i++ {
@@ -103,7 +105,7 @@ func exist(path string) (bool, error) {
 	case errors.Is(err, os.ErrNotExist):
 		return false, nil
 	default:
-		return false, fmt.Errorf("%p: %w", path, err)
+		return false, fmt.Errorf("%s: %w", path, err)
 	}
 }
 
