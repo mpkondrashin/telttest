@@ -35,12 +35,14 @@ func main() {
 	//	}
 	//	go processSamples(samplesChannel, config)
 	//	<-samplesChannel
-
-	paths := demomw.Generate(config.SourceDir)
-	for _, path := range paths {
-		checkSample(path, config)
+	for {
+		paths := demomw.Generate(config.SourceDir)
+		for _, path := range paths {
+			go checkSample(path, config)
+		}
+		log.Printf("Cycle finished")
+		time.Sleep(5 * time.Minute)
 	}
-	log.Printf("Cycle finished")
 }
 
 /*
@@ -53,9 +55,10 @@ func processSamples(samplesChannel chan string, config *Config) {
 */
 
 func checkSample(path string, config *Config) {
-	for i := 0; i < 20; i++ {
+	stopTime := time.Now().Add(config.Timeout)
+	for i := 0; time.Now().Before(stopTime); i++ {
 		log.Printf("%d: %s", i, path)
-		time.Sleep(1 * time.Second)
+		time.Sleep(10 * time.Second)
 		//time.Sleep(1 * time.Minute)
 		ok := checkConsistency(path, config)
 		if ok {

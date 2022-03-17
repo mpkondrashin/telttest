@@ -6,6 +6,7 @@ import (
 	"flag"
 	"os"
 	"strings"
+	"time"
 
 	"gopkg.in/yaml.v2"
 )
@@ -13,10 +14,11 @@ import (
 const ENV_PREFIX = "TELTTEST"
 
 type Config struct {
-	SourceDir     string `yaml:"SourceDir"`
-	TargetDir     string `yaml:"TargetDir"`
-	QuarantineDir string `yaml:"QuarantineDir"`
-	Log           string `yaml:"Log"`
+	SourceDir     string        `yaml:"SourceDir"`
+	TargetDir     string        `yaml:"TargetDir"`
+	QuarantineDir string        `yaml:"QuarantineDir"`
+	Log           string        `yaml:"Log"`
+	Timeout       time.Duration `yaml:"Timeout"`
 }
 
 func NewConfig() *Config {
@@ -82,6 +84,14 @@ func (c *Config) ParseEnvWithPrefix(prefix string) error {
 	if ok {
 		c.Log = v
 	}
+	v, ok = os.LookupEnv(p("TIMEOUT"))
+	if ok {
+		var err error
+		c.Timeout, err = time.ParseDuration(v)
+		if err != nil {
+			c.Timeout = 20 * time.Minute
+		}
+	}
 	return nil
 }
 
@@ -98,6 +108,9 @@ func (c *Config) Validate() error {
 	}
 	if c.QuarantineDir == "" {
 		return errors.New("no quarantine folder provided")
+	}
+	if c.Timeout == 0 {
+		return errors.New("no timeout provided")
 	}
 	return nil
 }

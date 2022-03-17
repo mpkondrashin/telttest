@@ -2,3 +2,4 @@ SourceDir: source
 TargetDir: target
 QuarantineDir: quarantine
 Log: telttest.log
+Timeout: 20m
