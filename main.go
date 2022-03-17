@@ -102,6 +102,7 @@ func checkConsistency(path string, config *Config) bool {
 
 func exist(path string) (bool, error) {
 	_, err := os.Stat(path)
+	return err == nil, nil
 	switch {
 	case err == nil:
 		return true, nil
