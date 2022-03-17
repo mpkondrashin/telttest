@@ -55,7 +55,7 @@ func checkSample(path string, config *Config) {
 	}
 	stopTime := time.Now().Add(config.Timeout)
 	for i := 0; time.Now().Before(stopTime); i++ {
-		log.Printf("%d: %s", i, path)
+		//log.Printf("%d: %s", i, path)
 		time.Sleep(10 * time.Second)
 		//time.Sleep(1 * time.Minute)
 		ok := checkConsistency(path, sha1, config)
@@ -69,17 +69,17 @@ func checkSample(path string, config *Config) {
 func checkConsistency(path string, sha1 string, config *Config) bool {
 	s, err := inDir(path)
 	if err != nil {
-		log.Print("inDir", err)
+		log.Print("inDir ", err)
 		return true
 	}
 	t, err := inTargetDir(path, config)
 	if err != nil {
-		log.Print("inTargetDir", err)
+		log.Print("inTargetDir ", err)
 		return true
 	}
 	q, err := inQuarantineDir(sha1, config)
 	if err != nil {
-		log.Print("inQuarantineDir", err)
+		log.Print("inQuarantineDir ", err)
 		return true
 	}
 	if s && !t && !q {
