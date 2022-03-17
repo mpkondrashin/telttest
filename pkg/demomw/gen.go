@@ -108,7 +108,7 @@ func build(code, goos, goarch, targetDir string) (string, error) {
 	targetPath := filepath.Join(targetDir, newName)
 	err = os.Rename(output, targetPath)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("os.Rename to %s: %w", targetPath, err)
 	}
 	return targetPath, nil
 }
