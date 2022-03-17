@@ -88,10 +88,12 @@ func checkConsistency(path string, sha1 string, config *Config) bool {
 	}
 	if s && t && !q {
 		// Copyed to target
+		log.Printf("Copyed: %s", path)
 		return true
 	}
 	if !s && !t && q {
 		// Quarantined
+		log.Printf("Quarantined: %s", path)
 		return true
 	}
 	log.Printf("Consistency check error: source = %v, target = %v, quarantine = %v, for %s", s, t, q, path)
@@ -100,7 +102,7 @@ func checkConsistency(path string, sha1 string, config *Config) bool {
 
 func exist(path string) (bool, error) {
 	_, err := os.Stat(path)
-	return err == nil, nil
+	//return err == nil, nil
 	switch {
 	case err == nil:
 		return true, nil
