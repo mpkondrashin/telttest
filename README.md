@@ -1,6 +1,8 @@
 # TunnelEffect long term testing utility
 
-This utility cintinious generate malicious and legitimate files
+Telttest checks TunnelEffect operations when it is configured to copy
+files from one folder to another.
+This utility continuously generats malicious and legitimate files
 and checks that each one of the files is either copied to 
 target folder or to Quarantine.
 
@@ -10,11 +12,14 @@ Use ```go build``` command from project root directory to build telttest utility
 
 ## Running
 
-SourceDir: source
-TargetDir: target
-QuarantineDir: quarantine
-Log: telttest.log
-Timeout: 20m
+Create telttest.yaml file with following content:
+```
+SourceDir: <TunnelEffect source folder - according to tunnelfeect.yaml configuration>
+TargetDir: <TunnelEffet target folder - according to tunnelfeect.yaml configuration>
+QuarantineDir: <TunnelEffect quarantine folder - according to tunnelfeect.yaml configuration>
+Log: telttest.log (log file name and path)
+Timeout: 20m (time to wait for copying to target or moving quarantine)
+```
 
-
+Run ```./telttest``` and monitor telttest.log file for errors.
 
