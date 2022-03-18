@@ -32,6 +32,7 @@ func main() {
 	for {
 		paths := demomw.Generate(config.SourceDir)
 		for _, path := range paths {
+			log.Printf("New sample: %s", path)
 			go checkSample(path, config)
 			time.Sleep(config.Pause)
 		}
