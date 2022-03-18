@@ -24,3 +24,38 @@ Pause: 5m (time to wait between sample generation)
 
 Run ```./telttest``` and monitor telttest.log file for errors.
 
+## Environment
+
+
+v, ok := os.LookupEnv(p("SOURCE_DIR"))
+	if ok {
+		c.SourceDir = v
+	}
+	v, ok = os.LookupEnv(p("TARGET_DIR"))
+	if ok {
+		c.TargetDir = v
+	}
+	v, ok = os.LookupEnv(p("QUARANTINE_DIR"))
+	if ok {
+		c.QuarantineDir = v
+	}
+	v, ok = os.LookupEnv(p("LOG"))
+	if ok {
+		c.Log = v
+	}
+	v, ok = os.LookupEnv(p("TIMEOUT"))
+	if ok {
+		var err error
+		c.Timeout, err = time.ParseDuration(v)
+		if err != nil {
+			return fmt.Errorf("%s: %w", p("TIMEOUT"), err)
+		}
+	}
+	v, ok = os.LookupEnv(p("PAUSE"))
+	if ok {
+		var err error
+		c.Pause, err = time.ParseDuration(v)
+		if err != nil {
+			return fmt.Errorf("%s: %w", p("PAUSE"), err)
+		}
+	}
