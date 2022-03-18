@@ -87,8 +87,8 @@ func checkConsistency(path string, sha1 string, config *Config) bool {
 		return false
 	}
 	if s && t && !q {
-		// Copyed to target
-		log.Printf("Copyed: %s", path)
+		// Copied to target
+		log.Printf("Copied: %s", path)
 		return true
 	}
 	if !s && !t && q {
