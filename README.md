@@ -19,6 +19,7 @@ TargetDir: <TunnelEffet target folder - according to tunnelfeect.yaml configurat
 QuarantineDir: <TunnelEffect quarantine folder - according to tunnelfeect.yaml configuration>
 Log: telttest.log (log file name and path)
 Timeout: 20m (time to wait for copying to target or moving quarantine)
+Pause: 5m (time to wait between sample generation)
 ```
 
 Run ```./telttest``` and monitor telttest.log file for errors.

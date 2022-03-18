@@ -3,3 +3,4 @@ TargetDir: target
 QuarantineDir: quarantine
 Log: telttest.log
 Timeout: 20m
+Pause: 1m

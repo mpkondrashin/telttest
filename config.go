@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -19,6 +20,7 @@ type Config struct {
 	QuarantineDir string        `yaml:"QuarantineDir"`
 	Log           string        `yaml:"Log"`
 	Timeout       time.Duration `yaml:"Timeout"`
+	Pause         time.Duration `yaml:"Pause"`
 }
 
 func NewConfig() *Config {
@@ -89,7 +91,15 @@ func (c *Config) ParseEnvWithPrefix(prefix string) error {
 		var err error
 		c.Timeout, err = time.ParseDuration(v)
 		if err != nil {
-			c.Timeout = 20 * time.Minute
+			return fmt.Errorf("%s: %w", p("TIMEOUT"), err)
+		}
+	}
+	v, ok = os.LookupEnv(p("PAUSE"))
+	if ok {
+		var err error
+		c.Pause, err = time.ParseDuration(v)
+		if err != nil {
+			return fmt.Errorf("%s: %w", p("PAUSE"), err)
 		}
 	}
 	return nil
@@ -111,6 +121,9 @@ func (c *Config) Validate() error {
 	}
 	if c.Timeout == 0 {
 		return errors.New("no timeout provided")
+	}
+	if c.Pause == 0 {
+		return errors.New("no pause provided")
 	}
 	return nil
 }

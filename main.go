@@ -23,7 +23,8 @@ func main() {
 	config := NewConfig()
 	err := config.ParseAll(configFileName)
 	if err != nil {
-		panic(fmt.Errorf("%s: %v", configFileName, err))
+		fmt.Printf("%s: %v\n", configFileName, err)
+		return
 	}
 	configLogging(config)
 	log.Printf("INFO %s Started", title)
@@ -32,20 +33,11 @@ func main() {
 		paths := demomw.Generate(config.SourceDir)
 		for _, path := range paths {
 			go checkSample(path, config)
+			time.Sleep(config.Pause)
 		}
-		log.Printf("INFO Cycle finished")
-		time.Sleep(1 * time.Minute)
+		log.Printf("INFO Generate cycle finished")
 	}
 }
-
-/*
-func processSamples(samplesChannel chan string, config *Config) {
-	for sample := range samplesChannel {
-		checkSample(sample, config)
-	}
-	samplesChannel <- ""
-}
-*/
 
 func checkSample(path string, config *Config) {
 	sha1, err := FileSHA1(path)
@@ -102,7 +94,6 @@ func checkConsistency(path string, sha1 string, config *Config) bool {
 
 func exist(path string) (bool, error) {
 	_, err := os.Stat(path)
-	//return err == nil, nil
 	switch {
 	case err == nil:
 		return true, nil
