@@ -26,14 +26,14 @@ func main() {
 		panic(fmt.Errorf("%s: %v", configFileName, err))
 	}
 	configLogging(config)
-	log.Printf("%s Started", title)
+	log.Printf("INFO %s Started", title)
 
 	for {
 		paths := demomw.Generate(config.SourceDir)
 		for _, path := range paths {
 			go checkSample(path, config)
 		}
-		log.Printf("Cycle finished")
+		log.Printf("INFO Cycle finished")
 		time.Sleep(1 * time.Minute)
 	}
 }
@@ -69,17 +69,17 @@ func checkSample(path string, config *Config) {
 func checkConsistency(path string, sha1 string, config *Config) bool {
 	s, err := inDir(path)
 	if err != nil {
-		log.Print("inDir ", err)
+		log.Printf("ERROR inDir: %v", err)
 		return true
 	}
 	t, err := inTargetDir(path, config)
 	if err != nil {
-		log.Print("inTargetDir ", err)
+		log.Printf("ERROR inTargetDir: %v", err)
 		return true
 	}
 	q, err := inQuarantineDir(sha1, config)
 	if err != nil {
-		log.Print("inQuarantineDir ", err)
+		log.Printf("ERROR inQuarantineDir: %v", err)
 		return true
 	}
 	if s && !t && !q {
@@ -88,15 +88,15 @@ func checkConsistency(path string, sha1 string, config *Config) bool {
 	}
 	if s && t && !q {
 		// Copied to target
-		log.Printf("Copied: %s", path)
+		log.Printf("INFO Copied: %s", path)
 		return true
 	}
 	if !s && !t && q {
 		// Quarantined
-		log.Printf("Quarantined: %s", path)
+		log.Printf("INFO Quarantined: %s", path)
 		return true
 	}
-	log.Printf("Consistency check error: source = %v, target = %v, quarantine = %v, for %s", s, t, q, path)
+	log.Printf("ERROR Consistency check error: source = %v, target = %v, quarantine = %v, for %s", s, t, q, path)
 	return true
 }
 
@@ -109,7 +109,7 @@ func exist(path string) (bool, error) {
 	case errors.Is(err, os.ErrNotExist):
 		return false, nil
 	default:
-		return false, fmt.Errorf("%s: %w", path, err)
+		return false, fmt.Errorf("ERROR %s: %w", path, err)
 	}
 }
 
