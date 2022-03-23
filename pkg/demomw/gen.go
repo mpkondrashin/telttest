@@ -262,7 +262,7 @@ func main() {
 }
 `
 
-var networkScanCode = `
+var networkScanCode = `//networkscan//
 package main
 
 import (
