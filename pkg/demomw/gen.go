@@ -16,7 +16,7 @@ import (
 
 func Generate(targetDir string) (paths []string) {
 	rand.Seed(time.Now().UnixNano())
-	for _, code := range []string{ransomwareCode, spywareCode, novirusCode, networkScanCode} {
+	for _, code := range []string{ransomwareCode, spywareCode, novirusCode} { //}, networkScanCode} {
 		path, err := build(code, "windows", "amd64", targetDir)
 		if err != nil {
 			log.Printf("Generate: %v", err)
